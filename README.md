@@ -1,58 +1,66 @@
 # rag-qa-system
 
-Sur ce repository, vous trouverez le code source de l'application React.jsbasé sur le concept du RAG aini que dans le dossier ``./example`` des extrait de code illustrant des concepts clés du RAG tel que la tokenisation, l'embedding...
+In this repository, you will find the source code for the React.js application based on the RAG concept, as well as code snippets in the `./example` folder illustrating key RAG concepts such as tokenization, embedding, and more.
 
-## Fonctionnement
+## How it works
 
 ### Technologies
 
 * React
-Le frontend de l'application à été développé en React. React permet de créer des composantes réutilisables, ce qui facilite le développement et la maintenance de l'application. Son écosystème riche offre une multitude de bibliothèques et d'outils complémentaires, permettant de trouver des solutions adaptées et de trasfomer mon application facilement.
-De plus, React offre une excellente performance grâce à sa gestion efficace du DOM virtuel.
+The frontend of the application was developed in React. React allows for the creation of reusable components, which facilitates the development and maintenance of the application. Its rich ecosystem offers a multitude of complementary libraries and tools, making it easy to find suitable solutions and transform my application easily.
+Moreover, React offers excellent performance thanks to its efficient management of the virtual DOM.
 
-* Django et Django Rest Framework (DRF)
-Le backend de l'application à été développé en Django. Django àassure une excellente scalabilité, tandis que son ORM puissant simplifie les interactions avec la base de données. 
-Django Rest Framework (DRF) complète parfaitement Django en facilitant la création d'APIs RESTful robustes et flexibles, permettant d'exposer facilement des endpoints API pour la communication entre le frontend React et le backend Django. Cette stack me permet de développer rapidement une application performante, sécurisée et facilement maintenable.
+* Django and Django Rest Framework (DRF)
+The backend of the application was developed in Django. Django ensures excellent scalability, while its powerful ORM simplifies interactions with the database. 
+Django Rest Framework (DRF) perfectly complements Django by facilitating the creation of robust and flexible RESTful APIs, making it easy to expose API endpoints for communication between the React frontend and Django backend. This stack allows me to quickly develop a performant, secure, and easily maintainable application.
 
-### Prérequis
+### Prerequisites
 
 - Python 3.10
-- Application Ollama
+- Ollama application
 
 ### Installation
 
-1. Installer et Lancez l'application Ollama
+1. Install and Launch the Ollama application
 
-2. Se déplacer dans au repertoire racine du dépot si ce n'est pas déja fait :
+2. Navigate to the root directory of the repository if not already there:
     ```bash
     cd ~/rag-qa-system
     ```
 
-### Lancer l'application
+### Launch the application
 
-1. Ouvrez un terminal Git Bash
-2. Lancez le script de similarité cosinus :
+1. Open a Git Bash terminal
+2. Run the start-up script:
     ```bash
     ./start_servers.sh
     ```
+This script will:
+- Set up and activate a Python virtual environment
+- Install all necessary Python dependencies
+- Pull required Ollama and Embedding models
+- Apply Django migrations
+- Start the Django server (exposing API endpoints for RAG system so that the React app can communicate with it)
+- Install React dependencies
+- Launch the React application (start the React development server, making the frontend accessible in a web browser for user interaction)
 
-## Problèmes rencontrés
+## Encountered Issues
 
-### Gestion des problèmes CORS
+### Handling CORS Issues
 
-J'ai rencontré un problème avec CORS (Cross-Origin Resource Sharing) lors du développement de mon application. Ce problème est survenu car les navigateurs modernes bloquent par défaut les requêtes HTTP effectuées depuis une origine différente de celle du serveur cible. Voici comment j'ai compris et résolu ce problème dans mon projet Django.
+I encountered a CORS (Cross-Origin Resource Sharing) issue while developing my application. This problem arose because modern browsers by default block HTTP requests made from an origin different from that of the target server. Here's how I understood and resolved this issue in my Django project.
 
-Le cœur du problème était que mon application React tournait sur `http://localhost:3000`, tandis que mon serveur Django était sur `http://127.0.0.1:8000`. Ces deux origines sont considérées comme différentes par le navigateur à cause du port et potentiellement du domaine.
+The core of the problem was that my React application was running on `http://localhost:3000`, while my Django server was on `http://127.0.0.1:8000`. These two origins are considered different by the browser due to the port and potentially the domain.
 
-Pour résoudre ce problème, j'ai dû installer et configurer le package django-cors-headers. Voici ce que j'ai ajouté à mon projet Django :
+To solve this problem, I had to install and configure the django-cors-headers package. Here's what I added to my Django project:
 
-1. J'ai d'abord installé le package :
+1. First, I installed the package:
 
 ```bash
 pip install django-cors-headers
 ```
 
-2. Ensuite, j'ai ajouté le middleware CORS dans mes paramètres Django :
+2. Then, I added the CORS middleware in my Django settings:
 
 ```python
 MIDDLEWARE = [
@@ -62,9 +70,9 @@ MIDDLEWARE = [
 ]
 ```
 
-Ce middleware intercepte toutes les requêtes entrantes et sortantes pour vérifier si elles respectent les règles CORS que j'ai définies.
+This middleware intercepts all incoming and outgoing requests to check if they comply with the CORS rules I defined.
 
-3. J'ai spécifié les origines autorisées :
+3. I specified the allowed origins:
 
 ```python
 CORS_ALLOWED_ORIGINS = [
@@ -73,12 +81,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 ```
 
-Ces lignes indiquent à mon serveur Django d'accepter les requêtes provenant de ces URL spécifiques, qui correspondent à l'origine de mon application React en développement.
+These lines tell my Django server to accept requests coming from these specific URLs, which correspond to the origin of my React application in development.
 
-Sans cette configuration, mes appels API depuis React étaient bloqués par le navigateur, qui affichait des erreurs du type :
+Without this configuration, my API calls from React were blocked by the browser.
 
-```
-Access to fetch at 'http://127.0.0.1:8000/' from origin 'http://localhost:3000' has been blocked by CORS policy.
-```
-
-Grâce à ces ajouts, j'ai pu permettre à mon serveur Django d'accepter les requêtes provenant de mon application React, résolvant ainsi le problème CORS. Mes appels Axios depuis React peuvent maintenant communiquer avec l'API Django sans être bloqués par la politique CORS du navigateur.
+Thanks to these additions, I was able to allow my Django server to accept requests from my React application, thus resolving the CORS issue. My Axios calls from React can now communicate with the Django API without being blocked by the browser's CORS policy.

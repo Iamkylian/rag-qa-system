@@ -147,10 +147,12 @@ EMBEDDING_MODEL_NAME = "nomic-embed-text"
 # Chemin vers la base de données Chroma
 CHROMA_PATH = str(BASE_DIR / "chroma_db")
 
-# Chemin vers les documents à ajouter à la base de données
+# Définition du chemin vers le dossier "data"
 DATA_PATH = os.path.join(BASE_DIR, "data")
-print(f"DATA_PATH oi: {DATA_PATH}")
 
+# Création du dossier "data" s'il n'existe pas
+if not os.path.exists(DATA_PATH):
+    os.makedirs(DATA_PATH)
 
 # Modèle de pre-prompts pour les questions, le contexte correpond aux documents similaires trouvés
 # et la question est la question posée par l'utilisateur
